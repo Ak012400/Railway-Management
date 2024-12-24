@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Railway_Management.Models.AllDataDetails.Station>
+
+@{
+    ViewBag.Title = "Station Details";
+}
+
+<h2>Station Details</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-warning">
+        @TempData["Error"]
+    </div>
+}
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Station ID</th>
+                <th>Station Name</th>
+                <th>Location</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var station in Model)
+            {
+                <tr>
+                    <td>@station.StationID</td>
+                    <td>@station.StationName</td>
+                    <td>@station.Location</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No stations available to display.</p>
+}

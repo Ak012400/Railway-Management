@@ -1,0 +1,322 @@
+﻿@using static Railway_Management.Models.AllDataDetails
+@model CustomerPersonalDetails
+@{
+   
+            Layout = "_CustomerLayout";
+       
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Details</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #eef2f3;
+            font-family: Arial, sans-serif;
+        }
+
+        .customer-card {
+            margin: 20px auto;
+            max-width: 800px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .photo-upload {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+            .photo-upload img {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                border: 2px solid #ddd;
+            }
+
+            .photo-upload input {
+                display: none;
+            }
+
+            .photo-upload label {
+                display: block;
+                cursor: pointer;
+                text-align: center;
+                font-size: 12px;
+                margin-top: 5px;
+                color: #007bff;
+            }
+
+        .form-container {
+            margin-top: 30px;
+        }
+
+            .form-container h4 {
+                margin-bottom: 20px;
+            }
+
+        .update-btn, .enable-btn {
+            margin-top: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+            .update-btn:hover, .enable-btn:hover {
+                background-color: #0056b3;
+            }
+
+        .form-container input[disabled] {
+            background-color: #e9ecef;
+        }
+
+        .error {
+            border: 2px solid red;
+        }
+
+        .modal {
+            background-color: rgba(0, 0, 0, 0.6);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: none;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal1 {
+            display: none; /* Initially hidden */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); /* Background overlay */
+            justify-content: center;
+            align-items: center;
+            z-index: 9999; /* Ensure it's above other elements */
+        }
+
+        .modal-content1 {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    
+</head>
+<body>
+    @{
+        if (@TempData["success"]!=null){
+            <script>
+
+            alert('@TempData["success"]');
+          
+            
+            </script>
+        }
+    }
+    <div align="center"></div>
+    <div class="container">
+        <div class="customer-card">
+            <!-- Photo Upload -->
+            <div class="photo-upload">
+                <img src="" id="profile-picture" alt="Profile">
+                <label for="photoUpload">Update Photo</label>
+                <input type="file" id="photoUpload" name="photoUpload" accept="image/*">
+            </div>
+
+            <!-- Customer General Details -->
+            <h3>Customer Details</h3>
+            <form id="generalDetailsForm" method="post" action="@Url.Action("UpdateUserDetails", "Customers")">
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="customerID">Customer ID</label>
+                        <input type="text" class="form-control" id="customerID" name="CustomerID" value="@User.FindFirst("CustomerID")?.Value" disabled>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" name="Name" value="@User.Identity.Name" required disabled>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="Email" value="@User.FindFirst("Email")?.Value" disabled>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="contact">Contact</label>
+                        <input type="text" class="form-control" id="contact" name="Contact" value="@User.FindFirst("Contact")?.Value" required disabled>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="Password" value="" disabled>
+                        <button type="button" class="btn btn-warning mt-2" onclick="openPasswordModal()">Update Password</button>
+                    </div>
+                </div>
+                <button type="button" class="update-btn" id="openModal" onclick="showModal()">Update Details</button>
+            </form>
+        </div>
+
+        <!-- Additional Details -->
+        <div class="form-container">
+            <h4>Additional Details</h4>
+            <form id="additionalDetailsForm" method="post" action="@Url.Action("UpdatePersonalDetails", "Customers")">
+                <input type="hidden" name="detailsID" value="@Model.detailsID" />
+                <div class="form-group">
+                    <label for="address">Address<span>*</span></label>
+                    <input type="text" class="form-control" id="address" name="Address" value="@Model.Address" disabled required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="city">City<span>*</span></label>
+                        <input type="text" class="form-control" id="city" name="City" value="@Model.City" disabled required>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="state">State<span>*</span></label>
+                        <input type="text" class="form-control" id="state" name="State" value="@Model.State" disabled required>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="country">Country<span>*</span></label>
+                        <input type="text" class="form-control" id="country" name="Country" value="@Model.Country" disabled required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="pincode">Pincode<span>*</span></label>
+                    <input type="text" class="form-control" id="pincode" name="Pincode" value="@Model.pincode" disabled required>
+                </div>
+                <button type="button" class="enable-btn" onclick="enableFields()">Edit Details</button>
+                <button type="submit" class="update-btn" disabled>Save Additional Details</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Updating General Details -->
+    <div class="modal" id="updateModal" align="center" style="padding-top:15%;">
+        <div class="modal-content">
+            <h5>Update General Details</h5>
+            <form id="updateModalForm" method="post" action="@Url.Action("UpdateUserDetails", "Customers")">
+                <div class="form-group">
+                    <label for="modalName">Name</label>
+                    <input type="text" class="form-control" id="modalName" name="Name" required>
+                </div>
+                <div class="form-group">
+                    <label for="modalContact">Contact</label>
+                    <input type="text" class="form-control" id="modalContact" name="Contact" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="button" class="btn btn-secondary" id="closeModal" onclick="$('#updateModal').hide()">Cancel</button>
+            </form>
+        </div>
+    </div>
+    <!-- Modal for Updating Password -->
+    <div class="modal1" id="passwordUpdateModal">
+        <div class="modal-content1">
+            <h5>Update Password</h5>
+            <form  id="passwordUpdateForm" method="post" action="@Url.Action("UpdateCustomerPassword", "Customers")" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="currentPassword">Current Password</label>
+                    <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <input type="password" class="form-control" id="newPassword" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Password</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <label for="errormessage" id="PasswordError" style="color:orangered">@TempData["passwordError"]</label>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+            $('#openModal').click(function () {
+                $('#updateModal').show();
+            });
+
+            $('#closeModal').click(function () {
+                $('#updateModal').hide();
+            });
+
+            $("form input").on("invalid", function () {
+                $(this).addClass("error");
+            }).on("input", function () {
+                $(this).removeClass("error");
+            });
+        });
+        function enableFields() {
+            const inputs = $('#additionalDetailsForm input');
+            inputs.prop('disabled', false);
+            $('#additionalDetailsForm .update-btn').prop('disabled', false);
+        }
+        function showModal(){
+            $('#updateModal').show();
+        }
+
+
+                function openPasswordModal() {
+            document.getElementById('passwordUpdateModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('passwordUpdateModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside the modal content
+        window.onclick = function(event) {
+            const modal = document.getElementById('passwordUpdateModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+
+
+         $('#newPassword, #confirmPassword').on('input', function () {
+            validatePassword();
+        });
+
+    </script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+﻿/* General Styles */
+body {
+    background-color: #f4f7fc;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading */
+.heading {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #2F4F4F;
+    margin-bottom: 20px;
+}
+
+/* Search Box */
+.search-box {
+    position: relative;
+}
+
+    .search-box input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+.suggestions-list {
+    position: absolute;
+    top: 40px;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: none;
+}
+
+    /* Display suggestions */
+    .suggestions-list.active {
+        display: block;
+    }
+
+/* Train Results */
+.train-list {
+    margin-top: 20px;
+}
+
+.train-item {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+    .train-item h4 {
+        font-size: 20px;
+        color: #2F4F4F;
+    }
+
+    .train-item p {
+        font-size: 16px;
+        color: #555;
+    }
+
+        .train-item p strong {
+            color: #333;
+        }
+
+    .train-item:hover {
+        background-color: #f4f7fc;
+    }

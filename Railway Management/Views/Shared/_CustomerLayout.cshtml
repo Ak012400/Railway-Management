@@ -1,0 +1,75 @@
+﻿@using Microsoft.AspNetCore.Http
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <style>
+        /* General Styles */
+        body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(to bottom right, #87CEFA, #E6E6FA);
+        color: #333;
+        }
+
+        header {
+        background-color: #2F4F4F;
+        color: #fff;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        }
+
+        .header-left {
+        font-size: 24px;
+        font-weight: bold;
+        }
+
+        .header-right {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        }
+
+        .header-right a {
+        text-decoration: none;
+        color: white;
+        font-size: 16px;
+        padding: 8px 16px;
+        border: 1px solid white;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+        }
+
+        .header-right a:hover {
+        background-color: #fff;
+        color: #2F4F4F;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            Railway Management
+        </div>
+        <div class="header-right">
+            <a href="@Url.Action("CustomerMainPage", "Customers")" id="logoutButton">Home</a>
+            @if (User.Identity.Name != null)
+            {
+                <a href="@Url.ActionLink("CustomerDetails","Customers")">Welcome @User.Identity.Name</a>
+                <a href="@Url.ActionLink("Logout","Customers")">Logout</a>
+               
+            }
+            
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <div>
+        @RenderBody()
+    </div>
+</body>
+</html>

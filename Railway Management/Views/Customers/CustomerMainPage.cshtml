@@ -1,0 +1,150 @@
+﻿@{
+    Layout = "_CustomerLayout";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Railway Management</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom right, #87CEFA, #E6E6FA);
+            color: #333;
+        }
+
+        header {
+            background-color: #2F4F4F;
+            color: #fff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+            .header-right a {
+                text-decoration: none;
+                color: white;
+                font-size: 16px;
+                padding: 8px 16px;
+                border: 1px solid white;
+                border-radius: 5px;
+                transition: background-color 0.3s;
+            }
+
+                .header-right a:hover {
+                    background-color: #fff;
+                    color: #2F4F4F;
+                }
+        /* Booking Section */
+        .main {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .booking-section {
+            width: 70%;
+            text-align: left;
+        }
+
+            .booking-section button {
+                font-size: 18px;
+                padding: 10px 20px;
+                background-color: #2F4F4F;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+                .booking-section button:hover {
+                    background-color: #87CEFA;
+                    color: #fff;
+                }
+        /* Side Container */
+        .side-container {
+            width: 25%;
+            background-color: #fff;
+            border: 2px solid #2F4F4F;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+            .side-container h3 {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+
+            .side-container ul {
+                list-style-type: none;
+                padding: 0;
+            }
+
+                .side-container ul li {
+                    margin-bottom: 10px;
+                }
+
+                    .side-container ul li a {
+                        text-decoration: none;
+                        color: #2F4F4F;
+                        font-size: 16px;
+                    }
+
+                        .side-container ul li a:hover {
+                            color: #87CEFA;
+                        }
+    </style>
+</head>
+<body>
+    @{
+        
+        if (TempData["success"] != null)
+        {
+            <script>alert('@TempData["success"]')</script>
+        }
+    }
+
+    
+   
+    <!-- Main Section -->
+    <div class="main">
+        <!-- Booking Section -->
+        <div class="booking-section">
+            <h2>New Train Ticket Booking</h2>
+            <a href="@Url.ActionLink("TicketBooking","Customers")">Book Now</a><br /><hr />
+            <a href="@Url.ActionLink("TrainsBooking","Trains")">GetTrainsDetails</a>
+            
+        </div>
+
+        <!-- Side Container -->
+        <div class="side-container">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="@Url.ActionLink("GetBookingDetails","Customers")">View Tickets</a></li>
+                <li><a href="#">Cancel Tickets</a></li>
+                <li><a href="#">Train Schedule</a></li>
+                <li><a href="#">Help Center</a></li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>

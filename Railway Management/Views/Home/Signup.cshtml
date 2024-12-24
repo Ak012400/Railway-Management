@@ -1,0 +1,76 @@
+﻿@{
+    ViewBag.Title = "User Signup";
+}
+<div align="center" id="status">
+    <h1 style="background-color:blanchedalmond">@TempData["success"]</h1>
+</div>
+<h2>User Signup</h2>
+
+<form id="signupForm" method="post" action="@Url.Action("Registration", "Customers")" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="Name">Full Name</label>
+        <input type="text" class="form-control" id="Name" name="Name" required placeholder="Enter your full name">
+    </div>
+    <div class="form-group">
+        <label for="Email">Email</label>
+        <input type="email" class="form-control" id="Email" name="Email" required placeholder="Enter your email">
+    </div>
+    <div class="form-group">
+        <label for="Contact">Contact Number</label>
+        <input type="text" class="form-control" id="Contact" name="Contact" required placeholder="Enter your contact number">
+    </div>
+    <label for="contacterror" id="contactError" style="color:red"></label>
+    <div class="form-group">
+        <label for="Password">Password</label>
+        <input type="password" class="form-control" id="Password" name="Password" required placeholder="Enter Your Password">
+    </div>
+    <div class="form-group">
+        <label for="ConfirmPassword">Confirm Password</label>
+        <input type="password" class="form-control" id="ConfirmPassword" name="confirmPassword" required placeholder="Enter Your Confirm Password">
+    </div>
+    <div id="error" style="color:red; display:none;">Passwords do not match!</div>
+    <button type="submit" id="btnsignup" class="btn btn-primary">Signup</button>
+    <br /><hr />
+    <label for="ErrorMessage" id="passwordMessage" style="font-display:block;font-size:larger;color:red">@TempData["passwordError"]</label>
+</form>
+
+<p>Already have an account? <a asp-action="Login">Login here</a>.</p>
+
+<script>
+    document.getElementById("signupForm").addEventListener("submit", function(event) {
+        var password = document.getElementById("Password").value;
+        var confirmPassword = document.getElementById("ConfirmPassword").value;
+        // Check if passwords match
+        if (password !== confirmPassword) {
+            // Prevent form submission
+            document.getElementById("error").style.display = "block";
+        } else {
+            document.getElementById("error").style.display = "none";
+        }
+    });
+
+    // Function to hide the status div after 5 seconds (5000 milliseconds)
+    setTimeout(function() {
+        document.getElementById('status').style.display = 'none';
+        document.getElementById('passwordMessage').style.display='none';
+    }, 8000); // 5000 milliseconds = 5 seconds
+
+             const inputBox = document.getElementById("Contact");
+         inputBox.addEventListener("keyup", (event) => {
+             const value = event.target.value;
+             const regexIndian = /^[6-9]\d{9}$/;
+             if(regexIndian.test(value)){
+                  document.getElementById("contactError").innerHTML='';
+                  $('#btnsignup').show();
+             }
+             else{
+                  document.getElementById("contactError").innerHTML="Number should be for indian number with 10 digit only...";
+                  document.getElementById("btnsignup").ariaRequired=true;
+                  $('#btnsignup').hide();
+             }
+
+        });
+
+
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

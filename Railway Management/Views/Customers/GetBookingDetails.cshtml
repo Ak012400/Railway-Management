@@ -1,0 +1,104 @@
+﻿@{
+    Layout = "_CustomerLayout";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your All Booking Details</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> <!-- Using Bootstrap for styling -->
+    <style>
+        .main-container {
+            max-width: 900px; /* Fixed width for the container */
+            margin: 0 auto;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            height: 600px; /* Fixed height for the container */
+            overflow-y: auto; /* Make the container scrollable */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .booking-container {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .booking-details {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+
+            .booking-details p {
+                margin: 5px 0;
+            }
+
+        .btn-show {
+            margin-top: 10px;
+        }
+
+        .card-header {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .card-body {
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h2 class="text-center">Your Booking Tickets</h2>
+        <div class="main-container">
+            @foreach (var booking in Model)
+            {
+                <div class="booking-container">
+                    <div class="card">
+                        <div class="card-header">
+                            @booking.TrainName
+                        </div>
+                        <div class="card-body">
+                            <p><strong>From:</strong> @booking.BStationName (Code: @booking.BStationCode)</p>
+                            <p><strong>To:</strong> @booking.StationName (Code: @booking.StationCode)</p>
+                            <p><strong>Booking Date:</strong> @booking.BookingDate</p>
+                            <button class="btn btn-primary btn-show" onclick="toggleDetails(@booking.BookingID)">Show Details</button>
+
+                            <div id="details-@booking.BookingID" class="booking-details">
+                                <p><strong>Train Number:</strong> @booking.TrainNumber</p>
+                                <p><strong>Distance:</strong> @booking.Distance km</p>
+                                <p><strong>Arrival Time:</strong> @booking.ArrivalTime</p>
+                                <p><strong>Departure Time:</strong> @booking.DepartureTime</p>
+                                <p><strong>Fare:</strong> ₹@booking.Fare</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <script>
+        function toggleDetails(bookingID) {
+            var detailsDiv = document.getElementById('details-' + bookingID);
+            if (detailsDiv.style.display === "none" || detailsDiv.style.display === "") {
+                detailsDiv.style.display = "block";
+            } else {
+                detailsDiv.style.display = "none";
+            }
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
