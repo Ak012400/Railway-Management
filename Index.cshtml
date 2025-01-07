@@ -1,0 +1,21 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+<style>
+    .accordion-body{
+        margin-bottom:0%;
+        padding-right:0%;
+        width:100%;
+        height:625px;
+        
+    }
+</style>
+@{
+    if(TempData["success"]!=null){
+        <script>alert('@TempData["success"]')</script>
+    }
+}
+<div class="accordion-body" align="center">
+    <h1>Lets Books The Ticket With New Era</h1>
+
+</div>
