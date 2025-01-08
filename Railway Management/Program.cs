@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Railway_Management.Models;
+using Railway_Management.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<IISServerOptions>(options =>
@@ -18,7 +19,10 @@ builder.Services.Configure<FormOptions>(options =>
 
 builder.Services.AddControllersWithViews();
 
-
+builder.Services.AddScoped<IMailService,MailServices>();
+builder.Services.AddScoped<IOTPService,OTPHandler>();
+builder.Services.AddScoped<IForgotPassword,ForgotPasswordService>();
+builder.Services.AddScoped<ICustomers,CustomerServices>();
 builder.Services.AddDbContextFactory<ConnectionContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("RailwayDbConnection")));
 

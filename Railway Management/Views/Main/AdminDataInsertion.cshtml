@@ -66,6 +66,10 @@
     </style>
 </head>
 <body>
+    <div class="modal" id="modal" align="center" style="background-color:aquamarine;width:auto;height:200px;">
+        @TempData["success"]
+        <label for="message">Hi India</label>
+    </div>
     <div class="container d-flex justify-content-center">
         <div class="form-container">
             <h2 class="form-title">Upload Stations JSON or Excel</h2>
@@ -87,6 +91,7 @@
                         <option value="station">All Station Data</option>
                         <option value="excel">Excel Data</option>
                         <option value="schedule">Train Schedule JsonData</option>
+                        <option value="countries_states">Insert the Countries And States Data</option>
                     </select>
                 </div>
                 <div class="text-center">
@@ -131,14 +136,15 @@
                 disablePage(true);
                 // Perform AJAX request
                 $.ajax({
-                    url: '@Url.Action("JsonParser", "Main")', // Your backend URL
+                    url: '@Url.Action("AdminDataInsertion", "Main")', 
                     type: 'POST',
                     data: formData,
-                    processData: false,  // Don't process the data
-                    contentType: false,  // Don't set content type
+                    processData: false, 
+                    contentType: false,  
                     success: function (response) {
                         // Hide loader once response is received
                         $("#loader").hide();
+                        console.log(response);
                         $("#responseMessage").html('<div class="alert alert-success">' + response.message + '</div>');
                     },
                     error: function (jqXHR, textStatus, errorThrown) {

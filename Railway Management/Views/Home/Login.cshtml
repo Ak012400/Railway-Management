@@ -1,6 +1,11 @@
 ﻿@{
     ViewBag.Title = "User Login";
 }
+<style>
+    .error{
+        color:red;
+    }
+</style>
 <div align="center" id="status">
     <h1 style="background-color:blanchedalmond">@TempData["success"]</h1>
 </div>
@@ -14,9 +19,53 @@
     <div class="form-group">
         <label for="Password">Password</label>
         <input type="password" class="form-control" id="Password" name="Password" required placeholder="Enter your password">
+       
     </div><hr />
     <button type="submit" class="btn btn-success btn-group-lg btn-primary">Login</button>
 </form>
+<br />
+    <button id="resetYourPassword" class="btn btn-primary">ForgotPassword</button>
+
+<div class="modal" id="forgotpage">
+    <div class="modal-dialog">
+        <div class="modal-content align-content-center">
+            <div class="modal-header">
+                <div class="row" style="width:100%;">
+                    <div class="row-cols-auto">
+                        <p align="center">Reset Your Password</p>
+                    </div>
+                    <div class="row-cols-auto" style="left:0">
+                        <button type="button" id="coloseModal" class="btn-close" style="margin-left:5px"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body align-content-center">
+                <div class="col" align="center">
+                    <div class="col-auto mb-auto">
+                        <label for="emailid">Email<span style="color:red">*</span></label>
+                        <input type="text" name="emailid" id="emailid" style="padding:5px;border:2px solid;border-radius:10px" />
+                        <span id="errorInput" style="color:red"></span>
+                    </div><br /><hr />
+                    <div class="col-auto mb-auto" align="center">
+                        <button type="button" id="emailSubmit" class="bnt btn-primary" style="color:white">Submit</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:40px;background-color:aliceblue">
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" align="center" id="loadermodal">
+    <div class="modal-dialog">
+        <div class="modal-body">
+            <img src="~/images/loader.gif" />
+        </div>
+    </div>
+</div>
+
 
 <p>Don't have an account? <a asp-action="Signup">Sign up here</a>.</p>
 <script>
@@ -24,4 +73,66 @@
     setTimeout(function() {
         document.getElementById('status').style.display = 'none';
     }, 5000); // 5000 milliseconds = 5 seconds
+
+    $(document).ready(function(){
+        $('#emailid').on('input',function(){
+          
+            const value=$('#emailid').val();
+            
+            if(emailid.length!=0){
+                $('#emailid').removeClass('error');
+                $('#errorInput').text('');
+                $('#emailSubmit').show();
+              
+            }
+            else{
+                $('#emailid').addClass('error');
+                $('#errorInput').text('Please enter your mail id');
+                $('#emailSubmit').hide();
+               
+            }
+        
+        });
+
+
+        $('#resetYourPassword').on('click',function(){
+        
+           $('#forgotpage').show();
+        });
+        $('#coloseModal').on('click',function(){
+          $('#forgotpage').hide();
+        
+        })
+
+        $('#emailSubmit').on('click',function(){
+        
+          const emailid = $('#emailid').val();
+          if(emailid.length==0){
+              alert('Please Enter Your MailID');
+          }
+          else{
+              $('#loadermodal').show();
+              $.post('/Customers/ForgotYourPassword',{emailid:emailid},function(message,status){
+                $('#loadermodal').hide();
+
+                alert(message.message);
+
+                $('#forgotpage').hide();
+
+              
+              }).fail(function(){
+                 $('#loadermodal').hide();
+                alert('There is some Technical Clitch,Please Try Again or Contact IT-Person');
+              });
+          }
+        
+        });
+
+
+
+    });
+
+
+
+
 </script>

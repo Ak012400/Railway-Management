@@ -5,7 +5,10 @@ namespace Railway_Management.Models
 {
     public class ConnectionContext:DbContext
     {
+        public ConnectionContext()
+        {
 
+        }
         public ConnectionContext(DbContextOptions<ConnectionContext> options) : base(options)
         {
 
@@ -29,7 +32,11 @@ namespace Railway_Management.Models
             modelBuilder.Entity<Booking>().HasOne(t=>t.Customer).WithMany().HasForeignKey(t=>t.CustomerID).OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<CustomerPersonalDetails>().HasOne(t => t.customer).WithMany().HasForeignKey(t => t.CustomerID).OnDelete(DeleteBehavior.Cascade);
-                
+
+            modelBuilder.Entity<AllCountries>().HasKey(a=>a.countryID);
+            modelBuilder.Entity<AllStates>().HasKey(a=>a.stateid);
+            modelBuilder.Entity<AllStates>().HasOne(t => t.allCountries).WithMany().HasForeignKey(a=>a.countryID).OnDelete(deleteBehavior: DeleteBehavior.Cascade);
+               
         }
         
         public DbSet<Station> Stations { get; set; }
@@ -42,6 +49,8 @@ namespace Railway_Management.Models
         public DbSet<TrainDetails> Train_Details { get; set; }
         public DbSet<TrainsRunningCoordinates> Trains_Running_Coordinates { get; set; }
         public DbSet<TrainSchedule> TrainSchedule { get; set; }
+        public DbSet<AllCountries> AllCountries { get; set; }
+        public DbSet<AllStates>  AllStates { get; set; }
         
 
     }

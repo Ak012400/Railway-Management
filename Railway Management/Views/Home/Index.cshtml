@@ -1,21 +1,42 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-<style>
-    .accordion-body{
-        margin-bottom:0%;
-        padding-right:0%;
-        width:100%;
-        height:625px;
-        
-    }
-</style>
-@{
-    if(TempData["success"]!=null){
-        <script>alert('@TempData["success"]')</script>
-    }
-}
-<div class="accordion-body" align="center">
-    <h1>Lets Books The Ticket With New Era</h1>
-
+<div class="modal" id="messageModal">
+    <div class="modal-dialog align-content-center">
+        <div class="modal-content">
+            <div class="modal-header">
+                <p>Your Message</p>
+            </div>
+            <div class="modal-body">
+                @{
+                    if(TempData["success"]!=null){
+                       <p>@TempData["success"]</p>
+                    }
+                }
+            </div>
+        </div>
+    </div>
 </div>
+<p id="infomessage" style="background:border-box;background-color:black;color:white;">@TempData["success"]</p>
+@* <script src="https://cdn.jsdelivr.net/npm/validator/validator.min.js"></script> *@
+    <h1>Lets Books The Ticket With New Era</h1>
+    <style>
+        body{
+           margin:20px;
+            font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        }
+        input{
+            padding:5px;
+        }
+
+
+    </style>
+<br />
+<script>
+    
+    
+    setTimeout(function() {
+        $('#infomessage').hide();
+    }, 8000);
+
+   </script>

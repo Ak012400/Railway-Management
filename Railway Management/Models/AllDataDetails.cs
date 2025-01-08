@@ -1,4 +1,5 @@
 ﻿using Humanizer;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using System.ComponentModel.DataAnnotations;
@@ -24,6 +25,7 @@ namespace Railway_Management.Models
             public string Contact { get; set; }
             public string Email { get; set; }
             public string Password { get; set; }
+            public string Role {  get; set; }
         }
 
         public class Train
@@ -58,53 +60,42 @@ namespace Railway_Management.Models
 
         public class Fare
         {
-           
+
             public int FareID { get; set; }
             public int TrainID { get; set; }
             public string Category { get; set; } // Local/Regional, Long Distance, Cargo
             public decimal Amount { get; set; }
         }
-        public class AllStations
-        {
-            [Key]
-            public  int Id { get; set; }
-            public string station_code { get; set; }
-            public string station_name { get; set; }
-            public string state { get; set; }
-            public string zone { get; set; }
-            public string address { get; set; }
-            public decimal? latitude { get; set; }
-            public decimal? longitude { get; set; }
-        }
         public class TrainDetails
         {
             [Key]
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
             public int trainID { get; set; }
- 
-            public string trainNO {  get; set; }    
-            public string trainName {  get; set; }  
-            public int? third_ac {  get; set; }
-           
-            public TimeSpan?   arrival_time {  get; set; } 
 
-            public string from_station_code {  get; set; }   
+            public string trainNO { get; set; }
+            public string trainName { get; set; }
+            public int? third_ac { get; set; }
+
+            public TimeSpan? arrival_time { get; set; }
+
+            public string from_station_code { get; set; }
             public string zone { get; set; }
-            public int?  chair_car {  get; set; }
-            
-            public int? first_class {  get; set; }  
-            public int? sleeper {  get; set; }
-            public int? distance_cover {  get; set; }   
-            public TimeSpan? departure_time {  get; set; }
-            public int  distance { get; set; }
-            public string trainType {  get; set; }   
+            public int? chair_car { get; set; }
+
+            public int? first_class { get; set; }
+            public int? sleeper { get; set; }
+            public int? distance_cover { get; set; }
+            public TimeSpan? departure_time { get; set; }
+            public int distance { get; set; }
+            public string trainType { get; set; }
             public int? duration_min { get; set; }
-            public string tostationname {  get; set; }
-            public string Classes {  get; set; }
-            public int? seconndac {  get; set; }
-            public string tostationcode {  get; set; }
-            public string returntrain {  get; set; }
-            public int? duration_hrs {  get; set; }
-            public string from_station_name {  get; set; }
+            public string tostationname { get; set; }
+            public string Classes { get; set; }
+            public int? seconndac { get; set; }
+            public string tostationcode { get; set; }
+            public string returntrain { get; set; }
+            public int? duration_hrs { get; set; }
+            public string from_station_name { get; set; }
             public int firstac { get; set; }
 
         }
@@ -112,7 +103,7 @@ namespace Railway_Management.Models
         {
             [Key]
             public int Coordinatesid { get; set; }
-            public int trainID { get; set; } 
+            public int trainID { get; set; }
 
             public decimal Latitude { get; set; }
             public decimal Longitude { get; set; }
@@ -130,6 +121,7 @@ namespace Railway_Management.Models
         public class TrainSchedule
         {
             [Key]
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
             public int Id { get; set; } // Primary Key
             public string Arrival { get; set; }
             public int Day { get; set; }
@@ -139,7 +131,7 @@ namespace Railway_Management.Models
             public string Train_Number { get; set; }
             public TimeSpan Departure { get; set; }
 
-           
+
         }
 
         public class CustomerPersonalDetails
@@ -156,6 +148,42 @@ namespace Railway_Management.Models
             public Customer customer { get; set; }
         }
 
+        public class AllCountries
+        {
+
+            [Key]
+            [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+            public int countryID {  get; set; }
+            public string countryphone { get; set; }
+            public string countrycode { get; set; }
+            public string countryname { get; set; }
+            public string countrycodealpha3 { get; set; }
+            public string currency { get; set; }
+            public string flag { get; set; }
+            public string symbol { get; set; }
+           
+        }
+        public class AllStates
+        {
+            [Key]
+            public int stateid { get; set; }
+            public int countryID { get; set; }
+            public string statename { get; set; }
+
+            public AllCountries allCountries { get; set; }
+        }
+        public class AllStations
+        {
+            [Key]
+            public int Id { get; set; }
+            public string station_code { get; set; }
+            public string station_name { get; set; }
+            public string state { get; set; }
+            public string zone { get; set; }
+            public string address { get; set; }
+            public decimal? latitude { get; set; }
+            public decimal? longitude { get; set; }
+        }
 
     }
 }

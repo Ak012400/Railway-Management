@@ -1,0 +1,109 @@
+﻿@{
+    Layout = "_CustomerLayout";
+}
+<style>
+    .error{
+       color:red;
+       outline:solid;
+    }
+    .success{
+        color:green;
+        outline:none;
+    }
+</style>
+
+<div class="container" style="width:400px;height:400px;background-color:mediumseagreen;margin-right:5px;margin-top:70px">
+    <div class="panel-heading">
+        <p align="center">Your Payable Amount - @ViewBag.Amount</p>
+    </div>
+    <div class="container-lg align-content-center col" align="center">
+        <div class="mb-lg-5">
+            <label for="amount">Amountd:</label>
+            <input typ="text" id="amount" name="amount" value="@ViewBag.Amount" style="padding:5px;border-radius:1px;"  disabled/>
+        </div>
+        <div class="mb-lg-5" align="center">
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" value="@ViewBag.Email" style="padding:5px;border-radius:1px" disabled />
+        </div>
+        <button type="button" class="btn btn-primary" id="submit" style="padding:10px;width:80px;border-radius:1px">Submit</button>
+    </div>
+</div>
+
+<div class="modal" id="messageModal">
+    <div class="modal-dialog align-content-center">
+        <div class="modal-content align-items-lg-center">
+            <div class="modal-header align-middle">
+                <h6>Attention..</h6>
+                <button id="close" class="btn btn-close" align="right"></button>
+            </div>
+            <div class="modal-body align-content-lg-center" style="padding:50px">
+                <div class="container-lg align-content-lg-center">
+                    <div class="mb4">
+                        <label id="messagename"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:30px;background:linear-gradient(56deg,violet,limegreen,pink,yellow);width:100%">
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+ $(document).ready(function(){
+
+     $('#amount').on('keyup',function(){
+
+         const inputBoxValue=$('#amount').val();
+       if(inputBoxValue>0){
+              $('#submit').show();
+              $('#amount').removeClass('error');
+       }
+       else{
+                $('#submit').hide();
+                 $('#amount').addClass('error');
+       }
+     
+     
+     });
+    
+
+    $('#submit').on('click',function(){
+       
+        const amount=$('#amount').val();
+        const email=$('#email').val();
+      $.post('/Customers/PaymentGateWay',{amount:amount,email:email},function(data,status){
+        console.log('Hi submitted ....'+data.status+data.message);
+         if(data.status==200){
+                $('#messagename').text(data.message);
+                $('#messagename').addClass('success');
+                $('#messageModal').show();
+
+         }
+         else{
+                      $('#messagename').text(data.message);
+                   $('#messagename').addClass('error');
+                   $('#messageModal').show();
+         }
+      
+      }).fail(function(){
+          alert('something technical happen');
+
+      });
+    
+    });
+
+
+
+       $('#close').on('click',function(){
+       
+         $('#messageModal').hide();
+       });
+
+
+ 
+ });
+</script>

@@ -64,5 +64,26 @@ public class TrainScheduleJson
     public string Train_Number { get; set; }
     public string Departure { get; set; }
 }
+public class CountriesExtract
+{
+    public string name {  get; set; }
+    public string countryCode {  get; set; }
+    public string countryCodeAlpha3 {  get; set; }
+    public string phone {  get; set; }
+    public string currency {  get; set; }   
+    public string flag {  get; set; }
+    public string symbol {  get; set; }
+   public List<StateProvince> stateProvinces { get; set; }
+}
+public class StateProvince
+{
+    public string name { get; set; }
+}
+
+public class AllCountries_States
+{
+    public List<AllStates> states { get; set; }
+    public List<AllCountries> countries { get; set; }
+}
 
 

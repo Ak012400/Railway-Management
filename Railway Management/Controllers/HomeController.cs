@@ -7,14 +7,16 @@ namespace Railway_Management.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IConfiguration _configuration;
+        public HomeController(ILogger<HomeController> logger, IConfiguration config)
         {
             _logger = logger;
+            _configuration = config;
         }
 
         public IActionResult Index()
         {
+           
             return View();
         }
 

@@ -1,0 +1,53 @@
+﻿@{
+    Layout = "_CustomerLayout";
+}
+<div class="container" align="center">
+    <div class="header">
+        <h4>Please Verify Your Email</h4>
+    </div>
+    <div class="container-md">
+        <div class="align-content-center">
+            <div class="accordion-item">
+                <div class="mb-5">
+                    <label for="otpInput" id="optInput" style="color:black">EnterOTP<span style="color:red">*</span>: </label><br />
+                    <input type="text" id="otptext" name="userOTP" />
+                </div>
+                <div class="mb-5">
+                    <button id="submitotp" class="btn btn-primary">Verify</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+      $('#submitotp').on('click',function(){
+       const otpValue=$('#otptext').val();
+       
+       if(otpValue!=null){
+
+           $.post('/Customers/VerifyOTP',{otpValue:otpValue},function(message,status){
+
+        
+              if(message.status=='200'){
+                  console.log(message.message);
+                  alert(message.message);
+                  window.location.href='/Home/Login';
+              }
+              else{
+                  console.log(message.message);
+                  alert(message.message);
+                  window.location.href='/Home/Signup';
+              }
+           
+           }).fail(function(){
+           
+              alert('There is some Technical Issue Please Report....');
+           });
+       }
+
+      });
+    
+    });
+</script>

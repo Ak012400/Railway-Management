@@ -37,12 +37,13 @@ namespace Railway_Management.Controllers
        
         public IActionResult AdminDataInsertion()
         {
+            TempData["success"] = TempData["success"];
             return View();  
 
         }
         [HttpPost]
         [RequestSizeLimit(804857600)]
-        public async Task<IActionResult> JsonParser([FromForm]IFormFile file,string target)
+        public async Task<IActionResult> AdminDataInsertion([FromForm]IFormFile file,string target)
         {
             try
             {
@@ -79,7 +80,7 @@ namespace Railway_Management.Controllers
                         if(data == null)
                         {
                             TempData["success"] = "Data while Train data reading got null";
-                            return RedirectToAction("AdminDataInsertion", "Main");
+                            return Json(new { message = "Data while Train data reading got null", status = 401 });
                         }
                         
                         using(var dx= _connectionContext.CreateDbContext())
@@ -100,7 +101,7 @@ namespace Railway_Management.Controllers
                        if (updatedResult > 0)
                         {
                             TempData["success"] = "Train Details data has uploaded to the data base successfully..";
-                            return RedirectToAction("AdminDataInsertion", "Main");
+                            return Json(new { message = "Train Details data has uploaded to the data base successfully..", status = 200 });
                         }
 
 
@@ -151,7 +152,31 @@ namespace Railway_Management.Controllers
                         Console.WriteLine("");
                     }
 
-                   
+                    if (target == "countries_states")
+                    {
+                       AllCountries_States data= JsonParseForCountries.ExtractCountries(filePath);
+                    
+                        if (data!=null)
+                        {
+                            using(var dx = _connectionContext.CreateDbContext())
+                            {
+                              await  dx.AllCountries.AddRangeAsync(data.countries);
+                               updatedResult= await dx.SaveChangesAsync();
+                                if (updatedResult >0)
+                                {
+                                    updatedResult = 0;
+                                  await  dx.AllStates.AddRangeAsync(data.states);
+                                    updatedResult=await dx.SaveChangesAsync();
+                                }
+                            }
+
+                            if (updatedResult >0)
+                            {
+                                TempData["success"] = "Your Data Has Successfully..inserted..";
+                                return Json(new { message = "All Json Data Has Uploaded to the Database....", status = 200 });
+                            }
+                        }
+                    }
                    
 
 
@@ -170,19 +195,19 @@ namespace Railway_Management.Controllers
                   if(val > 0)
                     {
                         TempData["success"] = "All Json Data Has Uploaded to the Database....";
-                        return RedirectToAction("AdminDataInsertion", "Main");
+                        return Json(new { message = "All Json Data Has Uploaded to the Database....", status = 200 });
                     }
 
                 }
                 TempData["success"] = "Some error occured while reading file";
-                return RedirectToAction("AdminDataInsertion","Main");
-                   
+                return Json(new { message = "Some error occured while reading file", status = 401 });
+
             }
             catch (Exception ex)
             {
 
                 TempData["Message"] = "File Must Needed";
-                return RedirectToAction("AdminDataInsertion", "Main");
+                return Json(new {message=ex.InnerException,status=401});
             }
 
         }

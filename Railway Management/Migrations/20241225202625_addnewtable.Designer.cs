@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Railway_Management.Models;
 
@@ -11,9 +12,11 @@ using Railway_Management.Models;
 namespace Railway_Management.Migrations
 {
     [DbContext(typeof(ConnectionContext))]
-    partial class ConnectionContextModelSnapshot : ModelSnapshot
+    [Migration("20241225202625_addnewtable")]
+    partial class addnewtable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,11 +27,8 @@ namespace Railway_Management.Migrations
 
             modelBuilder.Entity("Railway_Management.Models.AllDataDetails+AllCountries", b =>
                 {
-                    b.Property<int>("countryID")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("countryphone")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("countryID"));
 
                     b.Property<string>("countrycode")
                         .IsRequired()
@@ -39,10 +39,6 @@ namespace Railway_Management.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("countryname")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("countryphone")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -58,7 +54,7 @@ namespace Railway_Management.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("countryID");
+                    b.HasKey("countryphone");
 
                     b.ToTable("AllCountries");
                 });
@@ -71,7 +67,7 @@ namespace Railway_Management.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("stateid"));
 
-                    b.Property<int>("countryID")
+                    b.Property<int>("countryphone")
                         .HasColumnType("int");
 
                     b.Property<string>("statename")
@@ -80,7 +76,7 @@ namespace Railway_Management.Migrations
 
                     b.HasKey("stateid");
 
-                    b.HasIndex("countryID");
+                    b.HasIndex("countryphone");
 
                     b.ToTable("AllStates");
                 });
@@ -205,10 +201,6 @@ namespace Railway_Management.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -482,7 +474,7 @@ namespace Railway_Management.Migrations
                 {
                     b.HasOne("Railway_Management.Models.AllDataDetails+AllCountries", "allCountries")
                         .WithMany()
-                        .HasForeignKey("countryID")
+                        .HasForeignKey("countryphone")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

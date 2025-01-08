@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            background-color: #eef2f3;
+            background-color:white;
             font-family: Arial, sans-serif;
         }
 
@@ -36,9 +36,9 @@
         }
 
             .photo-upload img {
-                width: 80px;
-                height: 80px;
-                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                border-radius: 30%;
                 border: 2px solid #ddd;
             }
 
@@ -84,6 +84,7 @@
 
         .error {
             border: 2px solid red;
+            outline:none
         }
 
         .modal {
@@ -146,17 +147,26 @@
             
             </script>
         }
+        if(TempData["passwordError"]!=null){
+            <script>
+            alert('@TempData["passwordError"]')
+               Name();
+            </script>
+        }
     }
-    <div align="center"></div>
+    <img src="~/uploads/@Model.ImageURL" class="img-thumbnail img-fluid"  id="profileImage" alt="@Model.ImageURL" style="width:60px;height:60px;border:2px solid;border-radius:30px;">
+    <div align="center" style="top:0;left:20px">
+        <form method="post" id="profileChange" action="/Customers/UpdateCustomerProfile" enctype="multipart/form-data">
+            <label for="fileinput" name="selectFile">ChangeOrUploadProfilePicture</label>
+            <input type="file" name="photoUpload" accept="image/*" id="uploadPhoto" />
+            <button type="submit" class="form-control btn-primary" id="uploadProfile" style="width:100px;height:50px;">Upload</button>
+            <span style="color:red">Note*: You will have to Re-Login After Changing The Profile Image But for this page You Will Able to see...</span>
+        </form>
+    </div>
+    <br />
+    <br /><hr />
     <div class="container">
         <div class="customer-card">
-            <!-- Photo Upload -->
-            <div class="photo-upload">
-                <img src="" id="profile-picture" alt="Profile">
-                <label for="photoUpload">Update Photo</label>
-                <input type="file" id="photoUpload" name="photoUpload" accept="image/*">
-            </div>
-
             <!-- Customer General Details -->
             <h3>Customer Details</h3>
             <form id="generalDetailsForm" method="post" action="@Url.Action("UpdateUserDetails", "Customers")">
@@ -205,11 +215,17 @@
                     </div>
                     <div class="form-group col-md-4">
                         <label for="state">State<span>*</span></label>
-                        <input type="text" class="form-control" id="state" name="State" value="@Model.State" disabled required>
+                        @* <input type="text" class="form-control" id="state" name="State" value="@Model.State" disabled required> *@
+                        <select id="state" name="State" class="form-control" disabled>
+                            <option name="State" value="">@Model.State</option>
+                        </select>
                     </div>
                     <div class="form-group col-md-4">
                         <label for="country">Country<span>*</span></label>
-                        <input type="text" class="form-control" id="country" name="Country" value="@Model.Country" disabled required>
+                        @* <input type="text" class="form-control" id="country" name="Country" value="@Model.Country" disabled required> *@
+                        <select id="country" name="Country" class="form-control" disabled>
+                            <option name="Country" value="">@Model.Country</option>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group">
@@ -235,8 +251,9 @@
                     <label for="modalContact">Contact</label>
                     <input type="text" class="form-control" id="modalContact" name="Contact" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="submit" id="btnsubmitdetails" class="btn btn-primary">Save Changes</button>
                 <button type="button" class="btn btn-secondary" id="closeModal" onclick="$('#updateModal').hide()">Cancel</button>
+                <span id="errorspan" style="color:red"></span>
             </form>
         </div>
     </div>
@@ -244,7 +261,7 @@
     <div class="modal1" id="passwordUpdateModal">
         <div class="modal-content1">
             <h5>Update Password</h5>
-            <form  id="passwordUpdateForm" method="post" action="@Url.Action("UpdateCustomerPassword", "Customers")" enctype="multipart/form-data">
+            <form id="passwordUpdateForm" method="post" action="@Url.Action("UpdateCustomerPassword", "Customers")" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="currentPassword">Current Password</label>
                     <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
@@ -257,18 +274,41 @@
                     <label for="confirmPassword">Confirm Password</label>
                     <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Update Password</button>
+                <button type="submit" id="updatepassword" class="btn btn-primary">Update Password</button>
                 <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
                 <label for="errormessage" id="PasswordError" style="color:orangered">@TempData["passwordError"]</label>
+                
             </form>
         </div>
     </div>
+    <div class="modal" id="messageUpdate" align="center">
+        <div class="modal-dialog align-content-center">
+            <div class="modal-content align-content-center">
+                <div class="modal-header align-content-center">
+                    <h5>Attension!!!!!</h5>
+                    <button type="button" class="btn-close" id="close" data-dismiss="modal"></button>
+                </div>
+                <div class="modal-body align-items-center" style="background-color:lavenderblush">
+                    <div class="mb-3">
+                        <label for="message" id="message" style="color:red"></label>
+                        <label for="message" id="successmessage" style="color:green"></label>
+                    </div>
+                </div>
+                <div class="modal-footer align-baseline" style="background-color:blue">
+                    
+                </div>
+            </div>
 
+        </div>
+    </div>
 
-    <script>
+    <script>  
         $(document).ready(function () {
             $('#openModal').click(function () {
                 $('#updateModal').show();
+            });
+            $('#close').click(function(){
+             $('#messageUpdate').hide();
             });
 
             $('#closeModal').click(function () {
@@ -285,6 +325,8 @@
             const inputs = $('#additionalDetailsForm input');
             inputs.prop('disabled', false);
             $('#additionalDetailsForm .update-btn').prop('disabled', false);
+            $('#country').prop('disabled',false)
+            $('#state').prop('disabled',false)
         }
         function showModal(){
             $('#updateModal').show();
@@ -311,7 +353,97 @@
          $('#newPassword, #confirmPassword').on('input', function () {
             validatePassword();
         });
+        $('#testing').on('click',function(){
+         $('#messageUpdate').show();
+        });
 
+        $('#country').on('click',function(){
+
+          $.get('/Admin/GetCountries',function(data,status){
+             
+              console.log(data)
+              data.forEach(countryvalue=>{
+                 $('#country').append('<option name="Country" value="' + countryvalue + '">' + countryvalue+ '</option>');
+              });
+          
+          }).fail(function(){
+             alert(" did not find any country...");
+            
+          });
+        
+        })
+        $('#country').change(function(){
+            $('#state').empty();
+
+        });
+
+        $('#state').on('click',function(){
+           
+           const selectedValue=$('#country').val();
+               if(selectedValue==""||selectedValue=="0"||selectedValue==0){
+                   alert('Please Select Country First');
+               }
+               else{
+                   $.post('/Admin/GetAllStates',{selectedValue:selectedValue},function(data,status){
+                     
+                       console.log(data);
+                       console.log(status);
+                       data.forEach(statesdata=>{
+                           
+                           $('#state').append('<option name="state" value="'+ statesdata +'">'+ statesdata +'</option>');
+                       });
+                       
+                   }).fail(function(){
+                    alert('Unable to Load States');
+                   
+                   });
+               }
+        });
+        $('#modalContact').on('keyup',function(){
+        
+             const value=$('#modalContact').val();
+             if(value.length>10 || value.length<10){
+                 $('#modalContact').addClass('error');
+                 $('#btnsubmitdetails').hide()
+                 $('#errorspan').text('Number Must Have 10 Digit Only');
+
+             }
+             else{
+                  $('#modalContact').removeClass('error');
+                 $('#btnsubmitdetails').show();
+                  $('#errorspan').text('');
+             }
+        });
+        $('#newPassword').on('keyup',function(){
+            const value =$('#newPassword').val();
+           
+            if(/[a-z]/.test(value) && /[A-Z]/.test(value) && /[0-9]/.test(value) && /[\W_]/.test(value) && value.length > 9){
+               
+
+                $('#PasswordError').text('');
+                $('#newPassword').removeClass('error');
+                $('#updatepassword').show();
+
+            }
+            else{
+                 $('#PasswordError').text('Password Should Have All Charectors with Atleast 9..');
+                $('#newPassword').addClass('error');
+                $('#updatepassword').hide();
+                
+            }
+           
+        });
+        $('#profileChange').on('submit',function(event){
+            const file=$('#uploadPhoto').val();
+            if(!file){
+                $('#messageUpdate').show();
+                $('#message').text('Please Upload A Image To Upload..Thanks');
+                event.preventDefault();
+                
+            }
+        });
+
+        
     </script>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
