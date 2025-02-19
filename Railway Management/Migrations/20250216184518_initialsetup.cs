@@ -6,11 +6,30 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Railway_Management.Migrations
 {
     /// <inheritdoc />
-    public partial class CustomerDetailsTable : Migration
+    public partial class initialsetup : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "AllCountries",
+                columns: table => new
+                {
+                    countryID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    countryphone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    countrycode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    countryname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    countrycodealpha3 = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    currency = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    flag = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    symbol = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AllCountries", x => x.countryID);
+                });
+
             migrationBuilder.CreateTable(
                 name: "AllStations1",
                 columns: table => new
@@ -39,7 +58,8 @@ namespace Railway_Management.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Contact = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -79,8 +99,7 @@ namespace Railway_Management.Migrations
                 name: "Train_Details",
                 columns: table => new
                 {
-                    trainID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    trainID = table.Column<int>(type: "int", nullable: false),
                     trainNO = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     trainName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     third_ac = table.Column<int>(type: "int", nullable: true),
@@ -129,8 +148,7 @@ namespace Railway_Management.Migrations
                 name: "TrainSchedule",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     Arrival = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Day = table.Column<int>(type: "int", nullable: false),
                     Train_Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -142,6 +160,26 @@ namespace Railway_Management.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TrainSchedule", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AllStates",
+                columns: table => new
+                {
+                    stateid = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    countryID = table.Column<int>(type: "int", nullable: false),
+                    statename = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AllStates", x => x.stateid);
+                    table.ForeignKey(
+                        name: "FK_AllStates_AllCountries_countryID",
+                        column: x => x.countryID,
+                        principalTable: "AllCountries",
+                        principalColumn: "countryID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -221,6 +259,11 @@ namespace Railway_Management.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AllStates_countryID",
+                table: "AllStates",
+                column: "countryID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Bookings_CustomerID",
                 table: "Bookings",
                 column: "CustomerID");
@@ -239,6 +282,9 @@ namespace Railway_Management.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AllStates");
+
             migrationBuilder.DropTable(
                 name: "AllStations1");
 
@@ -262,6 +308,9 @@ namespace Railway_Management.Migrations
 
             migrationBuilder.DropTable(
                 name: "TrainSchedule");
+
+            migrationBuilder.DropTable(
+                name: "AllCountries");
 
             migrationBuilder.DropTable(
                 name: "Customers");

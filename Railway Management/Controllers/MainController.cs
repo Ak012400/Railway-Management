@@ -53,7 +53,7 @@ namespace Railway_Management.Controllers
                     return RedirectToAction("AdminDataInsertion", "Main");
                 }
 
-                if (Path.GetExtension(file.FileName) == ".json" || Path.GetExtension(file.FileName) == ".xlsx" || Path.GetExtension(file.FileName) == ".xls")
+                if (Path.GetExtension(file.FileName) == ".json" || Path.GetExtension(file.FileName) == ".xlsx" || Path.GetExtension(file.FileName) == ".xls" || Path.GetExtension(file.FileName) == ".pdf")
                 {
                     if (file == null || file.Length == 0)
                     {
@@ -69,6 +69,18 @@ namespace Railway_Management.Controllers
                     {
                         file.CopyTo(stream);
                     }
+
+
+                    byte[] filebytes=FileProcessor.GetFileByte(filePath);
+                    int beforeCompressSize=filebytes.Length;
+                    byte[] compressedData=FileProcessor.CompressFile(filebytes);
+                    Console.WriteLine("ZSTD-Alogos Compression-" + compressedData.Length);
+                    FileProcessor.CheckDifferentAlgos(filePath);
+                    int lengthCompressedFile=compressedData.Length;
+                    Console.WriteLine(lengthCompressedFile);
+
+
+
                     List<AllStations> alls = new List<AllStations>();   
                     StationJsonParsor stationJsonParsor = new StationJsonParsor();
                     GeoJsonReader geoJson=new GeoJsonReader(_connectionContext);

@@ -59,6 +59,7 @@ namespace Railway_Management.Controllers
         [HttpPost]
         public async Task<IActionResult> Registration([FromForm] Customer customers, string confirmPassword)
         {
+            
             int savevalue = 0;
             if (customers != null)
             {
@@ -128,8 +129,12 @@ namespace Railway_Management.Controllers
                 using (var dx = _connectionContext.CreateDbContext())
                 {
                     data = dx.Customers.Where(x => x.Email == loginDetails.Email && x.Password == hashpassword).FirstOrDefault();
+                    if (data != null)
+                    {
+                        userprofile = dx.CustomerPersonalDetails.Where(x => x.CustomerID == data.CustomerID).Select(x => x.ImageURL).FirstOrDefault();
+                    }
                     
-                   userprofile = dx.CustomerPersonalDetails.Where(x=>x.CustomerID==data.CustomerID).Select(x=>x.ImageURL).FirstOrDefault();
+                  
 
 
                 }
@@ -553,7 +558,6 @@ namespace Railway_Management.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public IActionResult VerifyOTP()
         {
 

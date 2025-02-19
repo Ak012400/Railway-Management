@@ -12,8 +12,8 @@ using Railway_Management.Models;
 namespace Railway_Management.Migrations
 {
     [DbContext(typeof(ConnectionContext))]
-    [Migration("20241222191344_CustomerDetailsTable")]
-    partial class CustomerDetailsTable
+    [Migration("20250216184518_initialsetup")]
+    partial class initialsetup
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,69 @@ namespace Railway_Management.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Railway_Management.Models.AllDataDetails+AllCountries", b =>
+                {
+                    b.Property<int>("countryID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("countryID"));
+
+                    b.Property<string>("countrycode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("countrycodealpha3")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("countryname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("countryphone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("currency")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("flag")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("symbol")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("countryID");
+
+                    b.ToTable("AllCountries");
+                });
+
+            modelBuilder.Entity("Railway_Management.Models.AllDataDetails+AllStates", b =>
+                {
+                    b.Property<int>("stateid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("stateid"));
+
+                    b.Property<int>("countryID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("statename")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("stateid");
+
+                    b.HasIndex("countryID");
+
+                    b.ToTable("AllStates");
+                });
 
             modelBuilder.Entity("Railway_Management.Models.AllDataDetails+AllStations", b =>
                 {
@@ -145,6 +208,10 @@ namespace Railway_Management.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -271,10 +338,7 @@ namespace Railway_Management.Migrations
             modelBuilder.Entity("Railway_Management.Models.AllDataDetails+TrainDetails", b =>
                 {
                     b.Property<int>("trainID")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("trainID"));
 
                     b.Property<string>("Classes")
                         .IsRequired()
@@ -360,10 +424,7 @@ namespace Railway_Management.Migrations
             modelBuilder.Entity("Railway_Management.Models.AllDataDetails+TrainSchedule", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Arrival")
                         .IsRequired()
@@ -418,6 +479,17 @@ namespace Railway_Management.Migrations
                     b.HasIndex("trainID");
 
                     b.ToTable("Trains_Running_Coordinates");
+                });
+
+            modelBuilder.Entity("Railway_Management.Models.AllDataDetails+AllStates", b =>
+                {
+                    b.HasOne("Railway_Management.Models.AllDataDetails+AllCountries", "allCountries")
+                        .WithMany()
+                        .HasForeignKey("countryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("allCountries");
                 });
 
             modelBuilder.Entity("Railway_Management.Models.AllDataDetails+Booking", b =>

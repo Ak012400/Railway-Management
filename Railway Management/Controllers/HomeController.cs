@@ -1,6 +1,9 @@
 using System.Diagnostics;
+using System.Text;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Railway_Management.Models;
+using Railway_Management.Services;
 
 namespace Railway_Management.Controllers
 {
@@ -8,15 +11,23 @@ namespace Railway_Management.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IConfiguration _configuration;
+        
+        private const string ENDPOINT = "https://arunk-m5wqdad2-eastus2.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-02-15-preview";
+
         public HomeController(ILogger<HomeController> logger, IConfiguration config)
         {
             _logger = logger;
             _configuration = config;
+            
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-           
+            // string result = await azureOpenAIService.GetChatCompletionTesting("what is c#");
+           //string result=await AzureOpenAiService.GetResultAsync("What is C#");
+          //  string result2 = await AzureOpenAiService.GetApiResult5("what is C#");
+           // Console.WriteLine(result);
+
             return View();
         }
 

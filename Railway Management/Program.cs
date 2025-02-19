@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Railway_Management.Models;
 using Railway_Management.Services;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<IISServerOptions>(options =>
@@ -23,6 +24,7 @@ builder.Services.AddScoped<IMailService,MailServices>();
 builder.Services.AddScoped<IOTPService,OTPHandler>();
 builder.Services.AddScoped<IForgotPassword,ForgotPasswordService>();
 builder.Services.AddScoped<ICustomers,CustomerServices>();
+//builder.Services.AddScoped<IAzureOpenAIService, AzureOpenAiService>();
 builder.Services.AddDbContextFactory<ConnectionContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("RailwayDbConnection")));
 
@@ -39,7 +41,14 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/Home/Index"; // Access denied path
     });
 
+
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ConnectionContext>();
+    dbContext.Database.Migrate(); // Ye line saari pending migrations ko apply kar degi
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
