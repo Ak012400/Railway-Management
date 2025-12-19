@@ -21,9 +21,12 @@ builder.Services.Configure<FormOptions>(options =>
 builder.Services.AddControllersWithViews();
 
 
-builder.Services.AddDbContextFactory<ConnectionContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("RailwayDbConnection")));
-builder.Services.AddScoped<IRailwayApis, APIService>();
+//builder.Services.AddDbContextFactory<ConnectionContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("RailwayDbConnection")));
+builder.Services.AddDbContext<ConnectionContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("RailwayDbPostgre")));
+
+builder.Services.AddHttpClient<IRailwayApis, APIService>();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
