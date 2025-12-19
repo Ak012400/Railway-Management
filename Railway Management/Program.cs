@@ -23,7 +23,7 @@ builder.Services.AddControllersWithViews();
 
 //builder.Services.AddDbContextFactory<ConnectionContext>(options =>
 //    options.UseSqlServer(builder.Configuration.GetConnectionString("RailwayDbConnection")));
-builder.Services.AddDbContext<ConnectionContext>(options =>
+builder.Services.AddDbContextFactory<ConnectionContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("RailwayDbPostgre")));
 
 builder.Services.AddHttpClient<IRailwayApis, APIService>();
