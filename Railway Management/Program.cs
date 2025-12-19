@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
+using Railway_Management.APIServices;
+using Railway_Management.IServices;
 using Railway_Management.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +23,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContextFactory<ConnectionContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("RailwayDbConnection")));
-
+builder.Services.AddScoped<IRailwayApis, APIService>();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
