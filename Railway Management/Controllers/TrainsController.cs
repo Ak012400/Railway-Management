@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
+using Railway_Management.IServices;
 using Railway_Management.Models;
 using System;
 using static Railway_Management.Models.AllDataDetails;
@@ -13,9 +14,11 @@ namespace Railway_Management.Controllers
     public class TrainsController : Controller
     {
         private readonly IDbContextFactory<ConnectionContext> connectionContext;
-        public TrainsController(IDbContextFactory<ConnectionContext> context)
+        private readonly IRailwayApis _apiService;
+        public TrainsController(IDbContextFactory<ConnectionContext> context,IRailwayApis railwayApis)
         {
             connectionContext = context;
+            _apiService = railwayApis;
         }
         [Authorize]
         public IActionResult TrainsBooking()
@@ -24,18 +27,18 @@ namespace Railway_Management.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllTrains(string searchTerm = "")
+        public async Task<IActionResult> GetTrainDetails(string searchParam)
         {
-            List<Train> trains = new List<Train>();
+            TrainDetailsApiResponse? trainResult = new TrainDetailsApiResponse();
             using (var dx = connectionContext.CreateDbContext())
             {
-                trains = await dx.Trains.Where(t => string.IsNullOrEmpty(searchTerm) || t.TrainName.Contains(searchTerm) || t.Source.Contains(searchTerm) || t.Destination.Contains(searchTerm) || t.TrainID.ToString().Contains(searchTerm)).ToListAsync();
+                 trainResult= await _apiService.GetTrainsAsync(searchParam);
 
             }
-            if (trains.Any())
+            if (trainResult?.Status==true)
             {
                
-                return Ok(trains);
+                return Ok(trainResult);
             }
             return BadRequest();
         }

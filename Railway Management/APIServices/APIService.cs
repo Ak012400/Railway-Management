@@ -42,19 +42,33 @@ namespace Railway_Management.APIServices
 
         async Task<TrainDetailsApiResponse?> IRailwayApis.GetTrainsAsync(string query)
         {
-            string url= _baseUrl+$"/searchTrain?query={query}";
-            var response = await _httpClient.GetAsync(_baseUrl);
-            response.EnsureSuccessStatusCode();
 
-            var json = await response.Content.ReadAsStringAsync();
+            
+            TrainDetailsApiResponse trainDetailsApiResponse = new TrainDetailsApiResponse();
+            var client = new HttpClient();
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"https://irctc1.p.rapidapi.com/api/v1/searchTrain?query="+query),
+                Headers =
+    {
+        { "x-rapidapi-key", _apiKey},
+        { "x-rapidapi-host", "irctc1.p.rapidapi.com" },
+    },
+            };
+            using (var response = await client.SendAsync(request))
+            {
+                response.EnsureSuccessStatusCode();
+                var body = await response.Content.ReadAsStringAsync();
+                trainDetailsApiResponse = JsonSerializer.Deserialize<TrainDetailsApiResponse>(body,
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    }
+                ) ?? new TrainDetailsApiResponse();
+            }
 
-            return JsonSerializer.Deserialize<TrainDetailsApiResponse>(
-                json,
-                new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                }
-            );
+            return trainDetailsApiResponse;
         }
 
        async Task<TrainsBetweenStation?> IRailwayApis.GetTrainScheduleAsync(string fromStation, string toStation, string date)
