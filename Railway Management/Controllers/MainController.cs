@@ -6,16 +6,21 @@ using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Newtonsoft.Json;
 using Railway_Management.Admin;
 using Microsoft.Extensions.Options;
+using Railway_Management;
 
 namespace Railway_Management.Controllers
 {
     public class MainController : Controller
     {
         private readonly IDbContextFactory<ConnectionContext> _connectionContext;
+        private readonly string _connectionString;
+        private readonly IConfiguration _configuration;
 
-        public MainController(IDbContextFactory<ConnectionContext> context)
+        public MainController(IDbContextFactory<ConnectionContext> context,IConfiguration configuration)
         {
+            _configuration = configuration;
             _connectionContext = context;
+            _connectionString=_configuration.GetConnectionString("RailwayDbPostgre") ?? string.Empty;
 
         }
         public async Task<IActionResult> MainPage()
@@ -46,13 +51,14 @@ namespace Railway_Management.Controllers
         {
             try
             {
+
                 if (file == null || file.Length <= 0)
                 {
                     TempData["Message"] = "File Must Needed";
                     return RedirectToAction("AdminDataInsertion", "Main");
                 }
 
-                if (Path.GetExtension(file.FileName) == ".json" || Path.GetExtension(file.FileName) == ".xlsx" || Path.GetExtension(file.FileName) == ".xls")
+                if (Path.GetExtension(file.FileName) == ".json" || Path.GetExtension(file.FileName) == ".xlsx" || Path.GetExtension(file.FileName) == ".xls" || Path.GetExtension(file.FileName)==".csv")
                 {
                     if (file == null || file.Length == 0)
                     {
@@ -151,7 +157,19 @@ namespace Railway_Management.Controllers
                         Console.WriteLine("");
                     }
 
-                   
+                    if (target == "csvFileData")
+                    {
+                        var path = filePath;
+
+                        using (var stream = new FileStream(path, FileMode.Create))
+                            await file.CopyToAsync(stream);
+
+                        await InsertFileClassImplementation.InsertFileClassImplementation.UploadCsvAsync(path, _connectionString);
+
+                        TempData["success"] = "File has uploaded succefully.......";
+                        return RedirectToAction("AdminDataInsertion", "Main");
+
+                    }
                    
 
 
@@ -191,7 +209,6 @@ namespace Railway_Management.Controllers
         {
             return View();
         }
-
 
         [HttpPost]
         public async Task<IActionResult> HandleDataUpload([FromForm] FileUpload fileUpload)
