@@ -70,7 +70,9 @@
         <div class="form-container">
             <h2 class="form-title">Upload Stations JSON or Excel</h2>
 
-            <div id="responseMessage"></div> <!-- To display success or error message -->
+            <div id="responseMessage"></div>
+            <div>@TempData["success"]</div><!-- To display success or error message -->
+
 
             <form id="uploadForm" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
@@ -88,7 +90,9 @@
                         <option value="excel">Excel Data</option>
                         <option value="schedule">Train Schedule JsonData</option>
                         <option value="csvFileData">CSV File Data For Trains</option>
+                        <option value="trainInfo_Schedule_New">Train Info Data</option>
                     </select>
+
                 </div>
                 <div class="text-center">
                     <button type="button" id="uploadButton" class="btn btn-primary w-100">Upload</button>
@@ -140,7 +144,10 @@
                     success: function (response) {
                         // Hide loader once response is received
                         $("#loader").hide();
-                        $("#responseMessage").html('<div class="alert alert-success">' + response.message + '</div>');
+                        if(response.message!=undefined){
+                               $("#responseMessage").html('<div class="alert alert-success">' + response.message + '</div>');
+
+                        }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         // Hide loader if error occurs

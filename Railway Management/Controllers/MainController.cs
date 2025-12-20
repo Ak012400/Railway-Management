@@ -1,12 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
-using Railway_Management.Models;
-using static Railway_Management.Models.AllDataDetails;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
-using Newtonsoft.Json;
-using Railway_Management.Admin;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using OfficeOpenXml.Style.Dxf;
 using Railway_Management;
+using Railway_Management.Admin;
+using Railway_Management.Models;
+using Railway_Management.Utilities;
+using static Railway_Management.Models.AllDataDetails;
 
 namespace Railway_Management.Controllers
 {
@@ -46,7 +49,7 @@ namespace Railway_Management.Controllers
 
         }
         [HttpPost]
-        [RequestSizeLimit(804857600)]
+        [RequestSizeLimit(80485760009)]
         public async Task<IActionResult> JsonParser([FromForm]IFormFile file,string target)
         {
             try
@@ -153,7 +156,11 @@ namespace Railway_Management.Controllers
                         List<TrainSchedule> trainSchedules = new List<TrainSchedule>();
                         JsonParsorTrainSchedule jsonParsorTrainSchedule = new JsonParsorTrainSchedule();
                         trainSchedules = jsonParsorTrainSchedule.jsonParseScheduleTain(filePath);
-
+                        using(var dx = _connectionContext.CreateDbContext())
+                        {
+                            await dx.TrainSchedule.AddRangeAsync(trainSchedules);
+                            val = await dx.SaveChangesAsync();
+                        }
                         Console.WriteLine("");
                     }
 
@@ -170,7 +177,10 @@ namespace Railway_Management.Controllers
                         return RedirectToAction("AdminDataInsertion", "Main");
 
                     }
-                   
+                    if (target!=null)
+                    {
+                 //       await DynamicDataImporter.ImportFileAsync(filePath, target, _connectionString);
+                    }
 
 
                     if (alls.Count > 0)
@@ -199,7 +209,7 @@ namespace Railway_Management.Controllers
             catch (Exception ex)
             {
 
-                TempData["Message"] = "File Must Needed";
+                TempData["success"] = "File Must Needed";
                 return RedirectToAction("AdminDataInsertion", "Main");
             }
 

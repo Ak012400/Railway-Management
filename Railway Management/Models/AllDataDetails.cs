@@ -131,12 +131,12 @@ namespace Railway_Management.Models
         {
             [Key]
             public int Id { get; set; } // Primary Key
-            public string Arrival { get; set; }
+            public string? Arrival { get; set; }
             public int Day { get; set; }
-            public string Train_Name { get; set; }
-            public string Station_Name { get; set; }
-            public string Station_Code { get; set; }
-            public string Train_Number { get; set; }
+            public string? Train_Name { get; set; }
+            public string? Station_Name { get; set; }
+            public string? Station_Code { get; set; }
+            public string? Train_Number { get; set; }
             public TimeSpan Departure { get; set; }
 
            
